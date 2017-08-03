@@ -40,6 +40,8 @@
 #include "concurrent_map.h"
 #include "sbas_telemetry_data.h"
 #include "sbas_ionospheric_correction.h"
+#include "antispoofing_message_queue.cpp"
+
 
 using google::LogMessage;
 
@@ -312,6 +314,8 @@ gps_l1_ca_pvt_cc::gps_l1_ca_pvt_cc(unsigned int nchannels,
             std::cout << "GNSS-SDR can not create message queues!" << std::endl;
             throw new std::exception();
         }
+    boost::interprocess::message_queue::remove("sqm_message_queue");
+
 }
 
 
@@ -499,6 +503,33 @@ int gps_l1_ca_pvt_cc::general_work (int noutput_items __attribute__((unused)), g
                     }
                 }
         }
+
+    /*
+     * Write the sqm file out. TODO make this addressable to the configuration interface.
+     */
+    for (unsigned int i = 0; i < d_nchannels; i++)
+    {
+//        sqm_file << in[i][0].Tracking_timestamp_secs << ',' << in[i][0].PRN << ',' << in[i][0].Flag_valid_pseudorange
+//                 << ',' << in[i][0].dll_Eq << ',' << in[i][0].dll_Pq << ',' << in[i][0].dll_Lq
+//                 << ',' << in[i][0].dll_Ei << ',' << in[i][0].dll_Pi << ',' << in[i][0].dll_Li
+//                 << ',' << in[i][0].CN0_dB_hz << ',' << in[i][0].d_TOW_at_current_symbol << in[i][0].Pseudorange_m << std::endl;
+        Anti_Spoofing_Message sqm_data(in[i][0]);
+        //try to send the data...
+        try
+        {
+            boost::interprocess::message_queue mq(boost::interprocess::open_or_create,"sqm_message_queue",100,sizeof(Anti_Spoofing_Message));
+            mq.send(&sqm_data,sizeof(Anti_Spoofing_Message),0);
+        }
+        catch(boost::interprocess::interprocess_exception &ex)
+        {
+            boost::interprocess::message_queue::remove("sqm_message_queue");
+            std::cout << ex.what() << std::endl;
+        }
+
+
+    }
+
+
 
     consume_each(1); //one by one
     return 1;

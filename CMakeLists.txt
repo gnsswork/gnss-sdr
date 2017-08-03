@@ -268,7 +268,6 @@ set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
 
 
-
 ################################################################################
 # Checkout cmake version
 ################################################################################
@@ -1273,10 +1272,10 @@ if (NOT ARCH_COMPILER_FLAGS)
         endif(OS_IS_MACOSX)
     endif(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
 endif (NOT ARCH_COMPILER_FLAGS)
-set(MY_CXX_FLAGS "${MY_CXX_FLAGS} ${ARCH_COMPILER_FLAGS}")
+set(MY_CXX_FLAGS "${MY_CXX_FLAGS} ${ARCH_COMPILER_FLAGS} -lpthread -lrt")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MY_CXX_FLAGS}")
-
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpthread -lrt")
 if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
     #http://gcc.gnu.org/wiki/Visibility
     add_definitions(-fvisibility=hidden)

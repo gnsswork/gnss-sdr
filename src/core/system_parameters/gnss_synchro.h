@@ -76,6 +76,10 @@ public:
     // Pseudorange
     double Pseudorange_m;
     bool Flag_valid_pseudorange;
+
+    // SQM and Anti-Spoofing Metrics
+    float dll_Eq,dll_Pq,dll_Lq;
+    float dll_Ei,dll_Pi,dll_Li;
 };
 
 #endif

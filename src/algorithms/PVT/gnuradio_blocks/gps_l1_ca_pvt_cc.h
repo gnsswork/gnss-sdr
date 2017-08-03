@@ -42,6 +42,8 @@
 #include "geojson_printer.h"
 #include "rtcm_printer.h"
 #include "gps_l1_ca_ls_pvt.h"
+#include "antispoofing_message_queue.cpp"
+#include <boost/interprocess/ipc/message_queue.hpp>
 
 
 class gps_l1_ca_pvt_cc;
@@ -160,9 +162,7 @@ public:
      * It is used to save the assistance data at the receiver shutdown
      */
     std::map<int,Gps_Ephemeris> get_GPS_L1_ephemeris_map();
-
     ~gps_l1_ca_pvt_cc (); //!< Default destructor
-
     int general_work (int noutput_items, gr_vector_int &ninput_items,
             gr_vector_const_void_star &input_items, gr_vector_void_star &output_items); //!< PVT Signal Processing
 };

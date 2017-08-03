@@ -429,6 +429,15 @@ int Gps_L1_Ca_Dll_Pll_Tracking_cc::general_work (int noutput_items __attribute__
             current_synchro_data.System = {'G'};
         }
 
+    /* Dump some sqm and anti-spoofing data into the gnss_sycnro obj */
+    current_synchro_data.dll_Ei = d_correlator_outs[0].real();
+    current_synchro_data.dll_Pi = d_correlator_outs[1].real();
+    current_synchro_data.dll_Li = d_correlator_outs[2].real();
+
+    current_synchro_data.dll_Eq = d_correlator_outs[0].imag();
+    current_synchro_data.dll_Eq = d_correlator_outs[1].imag();
+    current_synchro_data.dll_Eq = d_correlator_outs[2].imag();
+
     //assign the GNURadio block output data
     *out[0] = current_synchro_data;
     if(d_dump)

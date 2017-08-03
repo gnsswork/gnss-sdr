@@ -42,7 +42,7 @@ set(SYSTEM_PARAMETERS_SOURCES
 	 gps_cnav_iono.cc
 	 gps_cnav_utc_model.cc
 	 rtcm.cc
-)
+	 antispoofing_message_queue.cpp)
 
 
 include_directories(
